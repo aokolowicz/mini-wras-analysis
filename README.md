@@ -1,6 +1,7 @@
-# Mini WRAS Analysis
+# MINI-WRAS Analysis
 
-This repository contains a Python script named `number_concentration_daily.py`, which is designed to analyze and visualize number concentration data obtained from GRIMM MINI-WRAS 1.371 (Wide-Range Aerosol Spectrometer). The script processes data from the `sample-data` folder, specifically the `one_day-C.dat` file, to compute and visualize number concentration trends.
+This repository contains a Python script named `number_concentration_daily.py`, which is designed to analyze and visualize number concentration data obtained from GRIMM MINI-WRAS 1.371 (Wide-Range Aerosol Spectrometer). The script processes data from the `sample-data` folder, specifically the `one_day-C.dat` file, to compute and visualize number concentration trends.\
+**Feel free to use and customize it to analyze your own data!**
 
 ## Prerequisites
 
