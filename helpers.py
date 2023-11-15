@@ -1,5 +1,12 @@
 import os
 
+# Define constants
+mm = 1 / 25.4  # Conversion factor from inches to mm
+ro = 1680  # kg/m3
+conv_fact = 1.48  # Comparison between mass from MINI-WRAS and calculations
+label_font = {'fontname': 'Verdana', 'fontsize': 8, 'weight': 'bold'}
+tick_font = {'fontname': 'Verdana', 'fontsize': 8}
+
 
 def directory_tree(path=os.getcwd()):
     """
@@ -100,6 +107,24 @@ def tell_parent(item_path):
         return item_path[start:end]
     else:
         return None
+
+
+def y_formatter_function(x, pos):
+    """
+    FuncFormatter: Use a user-defined function for formatting. The function
+    should take in two inputs (a tick value x and a position pos), and return
+    a string containing the corresponding tick label.
+    """
+    if x == 0:
+        return '{:,}'.format(int(x)).replace(',', ' ')
+    elif x < 0.01:
+        return '{:,.3f}'.format(float(x)).replace(',', ' ').replace('.', ',')
+    elif x < 0.1:
+        return '{:,.2f}'.format(float(x)).replace(',', ' ').replace('.', ',')
+    elif x < 1:
+        return '{:,.1f}'.format(float(x)).replace(',', ' ').replace('.', ',')
+    else:
+        return '{:,}'.format(int(x)).replace(',', ' ')
 
 
 if __name__ == '__main__':
