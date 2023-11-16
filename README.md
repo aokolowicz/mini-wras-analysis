@@ -1,6 +1,6 @@
 # MINI-WRAS Analysis
 
-This repository contains a Python script named `number_concentration_daily.py`, which is designed to analyze and visualize number concentration data obtained from GRIMM MINI-WRAS 1.371 (Wide-Range Aerosol Spectrometer). The script processes data from the `sample-data` folder, specifically the `one_day-C.dat` file, to compute and visualize number concentration trends.\
+This repository contains a Python script named `number_concentration_filewise.py`, which is designed to analyze and visualize number concentration data obtained from GRIMM MINI-WRAS 1.371 (Wide-Range Aerosol Spectrometer). The script processes data from the `sample-data` folder, specifically the `one_day_sample-C.dat` file, to compute and visualize number concentration trends.\
 **Feel free to use and customize it to analyze your own data!**
 
 ## Prerequisites
@@ -8,7 +8,7 @@ This repository contains a Python script named `number_concentration_daily.py`, 
 Ensure you have Python installed on your machine. Additionally, install the required libraries by running:
 
 ```bash
-pip install pandas matplotlib
+pip install pandas matplotlib seaborn
 ```
 
 ## Usage
@@ -25,17 +25,18 @@ git clone https://github.com/aokolowicz/mini-wras-analysis.git
 cd mini-wras-analysis
 ```
 
-3. Run the script:
+3. Run the script, e.g.:
 
 ```bash
-python number_concentration_daily.py
+python number_concentration_filewise.py
 ```
 
-4. You will be prompted regarding saving the generated figure.
+4. You will be prompted regarding saving the generated figures.
 
 ## File Structure
 
-- `number_concentration_daily.py`: Python script for analyzing and visualizing number concentration data.
+- `boxplot-months.py`: Python script for analyzing and visualizing number concentration data on boxplots per months.
+- `number_concentration_filewise.py`: Python script for analyzing and visualizing number concentration data. Saving to the folders with data filewise.
 - `sample-data/`: Directory containing data files used by the repository.
 
 ## How to contribute?
