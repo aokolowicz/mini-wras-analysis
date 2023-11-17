@@ -47,7 +47,7 @@ python merge-mini-wras-data.py
 
 ## File Structure
 
-- `boxplot-months.py`: Python script for analyzing and visualizing number concentration data on boxplots per months.
+- `boxplots.py`: Python script for analyzing and visualizing number concentration data on boxplots per months or days.
 - `helpers.py`: Python script with useful functions and constants.
 - `merge-mini-wras-data.py`: Python script for MINI-WRAS data merging.
 - `number_concentration_filewise.py`: Python script for analyzing and visualizing number concentration data. Saving to the folders with data filewise.
