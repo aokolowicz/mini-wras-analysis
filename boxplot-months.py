@@ -29,8 +29,9 @@ parser = argparse.ArgumentParser(
 )
 
 # Define optional command-line arguments
-parser.add_argument('-m', '--mass', action='store_true')
-parser.add_argument('-n', '--nano', action='store_true')
+parser.add_argument('-d', '--days', action='store_true', help='Plot boxplots per day')
+parser.add_argument('-m', '--mass', action='store_true', help='Process mass data')
+parser.add_argument('-n', '--nano', action='store_true', help='Process nanoparticle data')
 
 # Parse the command-line arguments
 args = parser.parse_args()
@@ -38,8 +39,7 @@ args = parser.parse_args()
 # Variables to handle conditional logic based on command-line arguments
 fig_suffix, fig_suffix2 = '', ''
 
-# Logic based on parsed command-line arguments to determine
-# nanoparticles concentration
+# Logic to determine nanoparticles concentration
 if args.nano:
     data_file = 'nano.csv'
     column_name = 'total nano'
@@ -48,8 +48,7 @@ else:
     data_file = 'total.csv'
     column_name = 'total counts'
 
-# Additional logic for handling mass data if specified in the
-# command-line arguments
+# Logic to determine mass concentration
 if args.mass:
     df = pd.read_csv(os.path.join(path, 'merged-data', data_file), index_col=0)
     df = num_to_mass(df, ro, corr_fact)
@@ -71,23 +70,33 @@ else:
     ylabel = 'Number concentration [particles/$\mathregular{cm^3}$]'
     coeff = 5e3 if df[column_name].max() < 4e4 else 1e4
 
+
 # Dates from MINI-WRAS needs conversion to datetime format
 df.index = pd.to_datetime(df.index, dayfirst=True)
 
-# Extract month names for x-axis labels
-month_labels = df.index.strftime('%B').unique()
+# Default setting for data grouping on box charts (by month)
+grouped_by = [df.index.year, df.index.month]
 
-boxplot_data = [
-    group[column_name]
-    for _, group in df.groupby([df.index.year, df.index.month])
-]
+# Logic to plot box charts per day or month
+if args.days:
+    # Group data by days
+    grouped_by.append(df.index.day)
+    xlabels = df.index.strftime('%d/%m').unique()
+    figsize = (240 * mm, 150 * mm)
+    name_suffix = '-days'
+else:
+    xlabels = df.index.strftime('%B').unique()
+    figsize = (150 * mm, 90 * mm)
+    name_suffix = '-months'
+
+boxplot_data = [group[column_name] for _, group in df.groupby(grouped_by)]
 
 # Create a boxplot
-plt.figure(figsize=(150 * mm, 90 * mm), dpi=300, layout='constrained')
+plt.figure(figsize=figsize, dpi=300, layout='constrained')
 sns.boxplot(data=boxplot_data, linewidth=0.7, flierprops={'marker': 'x'})
 
 # X-axis
-plt.xticks(range(len(month_labels)), month_labels, **tick_font)
+plt.xticks(range(len(xlabels)), xlabels, **tick_font)
 
 # Y-axis
 ylocator = ticker.LinearLocator(math.ceil(df[column_name].max() / coeff) + 1)
@@ -102,6 +111,6 @@ plt.ylim(0, yupper)
 plt.title('2023', **title_font)
 
 # Save figure if requested
-fig_name = f'boxplots-months{fig_suffix}{fig_suffix2}'
+fig_name = f'boxplots{name_suffix}{fig_suffix}{fig_suffix2}'
 fig_path = os.path.join(path, 'merged-data', f'{fig_name}.png')
 save_figure(fig_name, fig_path)
