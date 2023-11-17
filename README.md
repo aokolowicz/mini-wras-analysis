@@ -25,7 +25,13 @@ git clone https://github.com/aokolowicz/mini-wras-analysis.git
 cd mini-wras-analysis
 ```
 
-3. Run the script, e.g.:
+3. Run the script choosing the right keyword and file extension in `list_files()` function, e.g.:
+
+```bash
+files = list_files(dir_tree, "location", ".dat")
+```
+
+or change the `path` variable in `helpers.py`.
 
 ```bash
 python number_concentration_filewise.py
