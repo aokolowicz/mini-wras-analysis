@@ -1,3 +1,4 @@
+import argparse
 import os
 import pandas as pd
 
@@ -8,6 +9,19 @@ from helpers import (
     print_directory_tree,
     path,
 )
+
+# Set up command-line argument parser
+parser = argparse.ArgumentParser(
+    description='Create boxplots for data grouped by month'
+)
+
+# Define optional command-line arguments
+parser.add_argument('-d', '--days', action='store_true', help='Plot boxplots per day')
+parser.add_argument('-m', '--mass', action='store_true', help='Process mass data')
+parser.add_argument('-n', '--nano', action='store_true', help='Process nanoparticle data')
+
+# Parse the command-line arguments
+args = parser.parse_args()
 
 # Get directory tree and files
 t = directory_tree(path)
