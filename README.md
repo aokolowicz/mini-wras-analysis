@@ -25,19 +25,25 @@ git clone https://github.com/aokolowicz/mini-wras-analysis.git
 cd mini-wras-analysis
 ```
 
-3. Run the script choosing the right keyword and file extension in `list_files()` function, e.g.:
-
-```bash
-files = list_files(dir_tree, "location", ".dat")
-```
-
-or change the `path` variable in `helpers.py`.
+3. Run the script:
 
 ```bash
 python number_concentration_filewise.py
 ```
 
-4. You will be prompted regarding saving the generated figures.
+choosing the right keyword and file extension in `list_files()` function or change the `path` variable in `helpers.py`.
+
+```bash
+files = list_files(dir_tree, "location", ".dat")
+```
+
+4. Other scripts require merged data. Make sure to use the following script beforehand.
+
+```bash
+python merge-mini-wras-data.py
+```
+
+5. You will be prompted regarding saving the generated figures.
 
 ## File Structure
 
