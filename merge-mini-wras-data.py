@@ -20,8 +20,9 @@ def merge_data(files, output_files):
             get_path(t, file, prefix=path), skiprows=10, index_col=0
         )
         if 'nano' in output_files:
-            # Nanoparticles are in the first 8 columns (from 10 to 100 nm),
-            # without column 0 where the total counts for all particles are
+            # Nanoparticles are in the first 8 columns (from 10 to
+            # 100 nm), without column 0 where the total counts for
+            # all particles are
             nano = df.iloc[:, 1:9]
             nano.insert(
                 loc=0,
@@ -32,7 +33,8 @@ def merge_data(files, output_files):
         for output_file in output_files:
             data_to_save = df if 'total' in output_file else nano
 
-            # Ensure that the file is overwritten if it's the first file being saved
+            # Ensure that the file is overwritten if it's the first
+            # file being saved
             if files.index(file) == 0:
                 data_to_save.to_csv(
                     os.path.join(path, 'merged-data', output_file) + '.csv',
