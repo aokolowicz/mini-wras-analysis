@@ -8,7 +8,7 @@ path = r'C:\Users\Adrian\Desktop\repos\mini-wras-analysis\sample-data'
 
 # Define constants
 mm = 1 / 25.4  # Conversion factor from inches to mm
-ro = 1680  # kg/m3
+ro = 1680  # kg/m^3
 corr_fact = 1.48  # Correct the calculated mass concentration
 
 # Define font parameters
@@ -89,12 +89,13 @@ def list_files(tree, keyword, file_extension):
 
 def num_to_mass(dataframe, ro, conv_fact=1):
     """
-    Convert number concentrations in 1/cm^3 to mass concentrations in mg/m^3
-    using provided density.
+    Convert number concentrations in 1/cm^3 to mass concentrations
+    in mg/m^3 using provided density.
     """
-    # Create an empty DataFrame with the same index as the input DataFrame
+    # Create an empty DataFrame with the same index as the input
+    # DataFrame
     mass_df = pd.DataFrame(index=dataframe.index)
-
+    
     # Loop through columns in the input DataFrame
     for col in dataframe:
         # Try to convert column name col (str) to diameter d (int).
@@ -103,28 +104,27 @@ def num_to_mass(dataframe, ro, conv_fact=1):
             d = int(col) * 1e-9  # Convert nanometers to meters
         except ValueError:
             continue
-
+        
         # Calculate the volume of a particle using the diameter d
-        V = 4 / 3 * math.pi * (d / 2) ** 3  # m^3
-
+        V = 4/3 * math.pi * (d / 2) ** 3  # m^3
+        
         # Calculate the total volume of particles of a particular size
         # as pandas.Series and convert to m^3
         V_total = V * dataframe[col] * 1e6  # m^3
-
-        # Calculate the mass of particles using the density ro
+        
+        # Calculate the mass of particles using the density ro 
         # as pandas.Series and convert to mg
         mass = V_total * ro * 1e6  # mg
-
+        
         # Add the calculated mass pandas.Series to the mass DataFrame
-        mass_df[col] = mass * conv_fact  # Apply conversion factor
-
-    # Calculate the total mass for each row and insert the 'total mass' column
-    mass_df.insert(
-        loc=0,
-        column='total mass',
-        value=[mass_df.iloc[i].sum() for i in range(mass_df.shape[0])],
-    )
-
+        mass_df[col] = mass * conv_fact
+    
+    # Calculate the total mass for each row and insert the 'total mass'
+    # column
+    mass_df.insert(loc=0,
+                   column='total mass',
+                   value=[mass_df.iloc[i].sum() for i in range(mass_df.shape[0])])
+    
     # Return the DataFrame containing mass concentrations
     return mass_df
 
@@ -146,12 +146,12 @@ def save_figure(fig_name, fig_path):
     """
     Prompt user to save the current figure.
     """
-    save_figure = input("Save figure? (Y/n)\n")
-    if save_figure.lower() != "n":
+    save_figure = input('Save figure? (Y/n)\n')
+    if save_figure.lower() != 'n':       
         plt.savefig(fig_path)
-        print(f"Figure saved as {fig_name}.png")
+        print(f'Figure saved as {fig_name}.png')
     else:
-        print("Figure not saved.")
+        print('Figure not saved.')
 
 
 def tell_parent(item_path):

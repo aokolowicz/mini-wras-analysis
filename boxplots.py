@@ -29,9 +29,15 @@ parser = argparse.ArgumentParser(
 )
 
 # Define optional command-line arguments
-parser.add_argument('-d', '--days', action='store_true', help='Plot boxplots per day')
-parser.add_argument('-m', '--mass', action='store_true', help='Process mass data')
-parser.add_argument('-n', '--nano', action='store_true', help='Process nanoparticle data')
+parser.add_argument(
+    '-d', '--days', action='store_true', help='Plot boxplots per day'
+)
+parser.add_argument(
+    '-m', '--mass', action='store_true', help='Process mass data'
+)
+parser.add_argument(
+    '-n', '--nano', action='store_true', help='Process nanoparticle data'
+)
 
 # Parse the command-line arguments
 args = parser.parse_args()
@@ -56,8 +62,8 @@ if args.mass:
     fig_suffix2 = '-mass'
     ylabel = 'Mass concentration [$\mathregular{mg/m^3}$]'
 
-    # Determine coefficient to calculate ylim based on the maximum value
-    # in the column
+    # Determine coefficient to calculate ylim based on the maximum
+    # value in the column
     if df[column_name].max() < 0.2:
         coeff = 0.01
     elif df[column_name].max() < 2:
