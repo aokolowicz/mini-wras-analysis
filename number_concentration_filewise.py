@@ -19,7 +19,7 @@ from helpers import (
 
 # File handling (indexes in col=0, conversion needed)
 dir_tree = directory_tree()
-files = list_files(dir_tree, 'location', 'C.dat')
+files = list_files(dir_tree, 'day', '.dat')
 for file in files:
     df = pd.read_table(get_path(dir_tree, file), skiprows=10, index_col=0)
 
