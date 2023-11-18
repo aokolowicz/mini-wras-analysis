@@ -1,6 +1,6 @@
 # MINI-WRAS Analysis
 
-This repository contains Python scripts designed to analyze and visualize particles (or nanoparticles) number and mass concentration data obtained from GRIMM MINI-WRAS 1.371 (Wide-Range Aerosol Spectrometer). Scripts processes data from the `sample-data` folder to compute and visualize particles (or nanoparticles) number or mass concentration trends.\
+This repository contains Python scripts designed to analyze and visualize **particles (or nanoparticles) number and mass concentration** data obtained from GRIMM MINI-WRAS 1.371 (Wide-Range Aerosol Spectrometer). Scripts process data from the `sample-data` folder.\
 **Feel free to use and customize it to analyze your own data!**
 
 ## Prerequisites
@@ -25,22 +25,16 @@ git clone https://github.com/aokolowicz/mini-wras-analysis.git
 cd mini-wras-analysis
 ```
 
-3. Run the script:
+3. Run the script by selecting the appropriate keyword and file extension within the `list_files()` function. For example, use `list_files(dir_tree, 'day', '.dat')` to specify the directory tree `dir_tree`, filter files by the keyword `'day'`, and limit results to files with the `'.dat'` extension.:
 
 ```bash
 python number_concentration_filewise.py
 ```
 
-choosing the right keyword and file extension in `list_files()` function or change the `path` variable in the `helpers.py` file.
+4. Before using other scripts that require merged data, update the `path` variable in `helpers.py` and use the specified script first.
 
 ```bash
-files = list_files(dir_tree, 'location', '.dat')
-```
-
-4. Other scripts require merged data. Make sure to use the following script beforehand.
-
-```bash
-python merge-mini-wras-data.py 
+python merge-mini-wras-data.py [OPTIONS]
 ```
 
 5. You will be prompted regarding saving the generated figures.
