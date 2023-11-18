@@ -1,6 +1,6 @@
 # MINI-WRAS Analysis
 
-This repository contains a Python script named `number_concentration_filewise.py`, which is designed to analyze and visualize number concentration data obtained from GRIMM MINI-WRAS 1.371 (Wide-Range Aerosol Spectrometer). The script processes data from the `sample-data` folder, specifically the `one_day_sample-C.dat` file, to compute and visualize number concentration trends.\
+This repository contains Python scripts designed to analyze and visualize particles (or nanoparticles) number and mass concentration data obtained from GRIMM MINI-WRAS 1.371 (Wide-Range Aerosol Spectrometer). Scripts processes data from the `sample-data` folder to compute and visualize particles (or nanoparticles) number or mass concentration trends.\
 **Feel free to use and customize it to analyze your own data!**
 
 ## Prerequisites
@@ -31,26 +31,26 @@ cd mini-wras-analysis
 python number_concentration_filewise.py
 ```
 
-choosing the right keyword and file extension in `list_files()` function or change the `path` variable in `helpers.py`.
+choosing the right keyword and file extension in `list_files()` function or change the `path` variable in the `helpers.py` file.
 
 ```bash
-files = list_files(dir_tree, "location", ".dat")
+files = list_files(dir_tree, 'location', '.dat')
 ```
 
 4. Other scripts require merged data. Make sure to use the following script beforehand.
 
 ```bash
-python merge-mini-wras-data.py
+python merge-mini-wras-data.py 
 ```
 
 5. You will be prompted regarding saving the generated figures.
 
 ## File Structure
 
-- `boxplots.py`: Python script for analyzing and visualizing number concentration data on boxplots per months or days.
-- `helpers.py`: Python script with useful functions and constants.
-- `merge-mini-wras-data.py`: Python script for MINI-WRAS data merging.
-- `number_concentration_filewise.py`: Python script for analyzing and visualizing number concentration data. Saving to the folders with data filewise.
+- `boxplots.py`: Particle (or nanoparticle) number or mass concentration data on boxplots per months or days.
+- `helpers.py`: Useful functions and constants.
+- `merge-mini-wras-data.py`: MINI-WRAS data merging - `C.dat` (particle number concentration) and `M.dat` (particulate matter mass concentration)
+- `number_concentration_filewise.py`: Particle and nanoparticle number concentration data visualization. Saving to the folders with data filewise.
 - `sample-data/`: Directory containing data files used by the repository.
 
 ## How to contribute?
