@@ -25,17 +25,29 @@ git clone https://github.com/aokolowicz/mini-wras-analysis.git
 cd mini-wras-analysis
 ```
 
-3. Run the script, e.g.:
+3. Run the script:
 
 ```bash
 python number_concentration_filewise.py
 ```
 
-4. You will be prompted regarding saving the generated figures.
+choosing the right keyword and file extension in `list_files()` function or change the `path` variable in `helpers.py`.
+
+```bash
+files = list_files(dir_tree, "location", ".dat")
+```
+
+4. Other scripts require merged data. Make sure to use the following script beforehand.
+
+```bash
+python merge-mini-wras-data.py
+```
+
+5. You will be prompted regarding saving the generated figures.
 
 ## File Structure
 
-- `boxplot-months.py`: Python script for analyzing and visualizing number concentration data on boxplots per months.
+- `boxplots.py`: Python script for analyzing and visualizing number concentration data on boxplots per months or days.
 - `helpers.py`: Python script with useful functions and constants.
 - `merge-mini-wras-data.py`: Python script for MINI-WRAS data merging.
 - `number_concentration_filewise.py`: Python script for analyzing and visualizing number concentration data. Saving to the folders with data filewise.
