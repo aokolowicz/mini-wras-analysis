@@ -47,7 +47,9 @@ def merge_data(files, output_files):
 
 
 # Set up command-line argument parser
-parser = argparse.ArgumentParser(description='Merge data according to its type')
+parser = argparse.ArgumentParser(
+    description='Merge data according to its type'
+)
 
 # Define optional command-line arguments
 parser.add_argument(
