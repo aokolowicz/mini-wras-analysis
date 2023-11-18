@@ -16,7 +16,9 @@ files = list_files(t, 'location', 'C.dat')
 
 # Loop through the files and process data
 for file in files:
-    df = pd.read_table(get_path(t, file, prefix=path), skiprows=10, index_col=0)
+    df = pd.read_table(
+        get_path(t, file, prefix=path), skiprows=10, index_col=0
+    )
     # Nanoparticles are in the first 8 columns (from 10 to 100 nm),
     # without column 0 where the total counts for all particles are
     nano = df.iloc[:, 1:9]

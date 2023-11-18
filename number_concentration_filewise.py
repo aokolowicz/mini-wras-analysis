@@ -117,6 +117,6 @@ for file in files:
     fig_name = f"Total Number and Nano ({file[:file.rfind('-')]})"
     fig_path = os.path.join(
         get_path(dir_tree, tell_parent(get_path(dir_tree, file))),
-        f'{fig_name}.png'
+        f'{fig_name}.png',
     )
     save_figure(fig_name, fig_path)
