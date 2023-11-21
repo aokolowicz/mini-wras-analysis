@@ -61,7 +61,6 @@ def main():
         ylabel = 'Number concentration [particles/$\mathregular{cm^3}$]'
         coeff = 5e3 if df[column_name].max() < 4e4 else 1e4
 
-
     # Logic for plotting box charts by day or month
     if args.days:
         # Ensure proper using of flags
@@ -91,9 +90,7 @@ def main():
         figsize = (150 * mm, 90 * mm)
 
         for _, group in df.groupby([df.index.year, df.index.month]):
-            title = (
-                f'{group.first_valid_index():%B} {group.first_valid_index():%Y}'
-            )
+            title = f'{group.first_valid_index():%B} {group.first_valid_index():%Y}'
             xticks_labels = group.index.strftime('%a, %d').unique()
             name_suffix = '-' + title.replace(' ', '-')
 
@@ -180,12 +177,24 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def plot_box_chart(dataframe, column, grouped_by, figsize, title, xticks_labels, ylabel, mass=False, coeff=1):
+def plot_box_chart(
+    dataframe,
+    column,
+    grouped_by,
+    figsize,
+    title,
+    xticks_labels,
+    ylabel,
+    mass=False,
+    coeff=1,
+):
     """
     Plots a boxplot from the provided dataframe based on given parameters.
     """
     # Group data by grouped_by variable
-    boxplot_data = [group[column] for _, group in dataframe.groupby(grouped_by)]
+    boxplot_data = [
+        group[column] for _, group in dataframe.groupby(grouped_by)
+    ]
 
     # Create a boxplot
     plt.figure(figsize=figsize, dpi=300, layout='constrained')
@@ -196,10 +205,15 @@ def plot_box_chart(dataframe, column, grouped_by, figsize, title, xticks_labels,
 
     # Y-axis
     if mass:
-        ylocator = ticker.LinearLocator(math.ceil(dataframe[column].max() / coeff) + 1)
+        ylocator = ticker.LinearLocator(
+            math.ceil(dataframe[column].max() / coeff) + 1
+        )
         plt.gca().yaxis.set_major_locator(ylocator)
-    plt.gca().yaxis.set_major_formatter(ticker.FuncFormatter(y_formatter_function))
+    
     plt.ylabel(ylabel, **label_font)
+    plt.gca().yaxis.set_major_formatter(
+        ticker.FuncFormatter(y_formatter_function)
+    )
 
     # Calculate y-axis limits
     yupper = math.ceil(dataframe[column].max() / coeff) * coeff
