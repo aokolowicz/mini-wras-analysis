@@ -1,4 +1,5 @@
 # MINI-WRAS Analysis
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 This repository contains Python scripts designed to analyze and visualize **particles (or nanoparticles) number and mass concentration** data obtained from GRIMM MINI-WRAS 1.371 (Wide-Range Aerosol Spectrometer). Scripts process data from the `sample-data` folder.\
 **Feel free to use and customize it to analyze your own data!**
@@ -41,11 +42,11 @@ python merge-mini-wras-data.py [OPTIONS]
 
 ## File Structure
 
-- `boxplots.py`: Particle (or nanoparticle) number or mass concentration data on boxplots per months or days.
 - `helpers.py`: Useful functions and constants.
-- `merge-mini-wras-data.py`: MINI-WRAS data merging - `C.dat` (particle number concentration) and `M.dat` (particulate matter mass concentration)
-- `number_concentration_filewise.py`: Particle and nanoparticle number concentration data visualization. Saving to the folders with data filewise.
 - `sample-data/`: Directory containing data files used by the repository.
+- `number_concentration_filewise.py`: Particle and nanoparticle number concentration data visualization. Saving to the folders with data filewise.
+- `merge-mini-wras-data.py`: MINI-WRAS data merging - `C.dat` (particle number concentration) and `M.dat` (particulate matter mass concentration)
+- `boxplots.py`: Particle (or nanoparticle) number or mass concentration data on boxplots per months or days.
 
 ## How to contribute?
 
