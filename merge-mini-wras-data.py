@@ -6,18 +6,19 @@ from helpers import (
     directory_tree,
     get_path,
     list_files,
+    parse_arguments,
     print_directory_tree,
     path,
 )
 
 
-def merge_data(files, output_files):
+def merge_data(files, output_files, prefix):
     """
     Merges data from input files and saves it into output files.
     """
     for file in files:
         df = pd.read_table(
-            get_path(t, file, prefix=path), skiprows=10, index_col=0
+            get_path(t, file, prefix=prefix), skiprows=10, index_col=0
         )
         if 'nano' in output_files:
             # Nanoparticles are in the first 8 columns (from 10 to
@@ -31,38 +32,24 @@ def merge_data(files, output_files):
             )
 
         for output_file in output_files:
-            data_to_save = df if 'total' in output_file else nano
-
+            data_to_save = nano if 'nano' in output_file else df
             # Ensure that the file is overwritten if it's the first
             # file being saved
             if files.index(file) == 0:
                 data_to_save.to_csv(
-                    os.path.join(path, 'merged-data', output_file) + '.csv',
+                    os.path.join(prefix, 'merged-data', output_file) + '.csv',
                     mode='w',
                 )
             else:
                 data_to_save.to_csv(
-                    os.path.join(path, 'merged-data', output_file) + '.csv',
+                    os.path.join(prefix, 'merged-data', output_file) + '.csv',
                     mode='a',
                     header=False,
                 )
 
 
-# Set up command-line argument parser
-parser = argparse.ArgumentParser(
-    description='Merge data according to its type'
-)
-
-# Define optional command-line arguments
-parser.add_argument(
-    '-p',
-    '--particulate',
-    action='store_true',
-    help='Merge particulate matter (PM) data',
-)
-
-# Parse the command-line arguments
-args = parser.parse_args()
+# Set up command-line argument parser and parse arguments
+args = parse_arguments(particulate=True)
 
 # Get directory tree and files
 t = directory_tree(path)
@@ -71,9 +58,9 @@ t = directory_tree(path)
 if args.particulate:
     files = list_files(t, 'location', 'M.dat')
     # Merge particulate matter data
-    merge_data(files, ['PMs'])
+    merge_data(files, ['PMs'], path)
 
 else:
     files = list_files(t, 'location', 'C.dat')
     # Merge total and nano data
-    merge_data(files, ['total', 'nano'])
+    merge_data(files, ['total', 'nano'], path)
