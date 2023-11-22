@@ -1,4 +1,3 @@
-import argparse
 import locale
 import math
 import matplotlib.pyplot as plt
@@ -9,8 +8,10 @@ import sys
 
 from matplotlib import ticker
 from helpers import (
+    determine_data_file,
     num_to_mass,
     save_figure,
+    parse_arguments,
     y_formatter_function,
     mm,
     path,
@@ -27,7 +28,7 @@ def main():
     locale.setlocale(locale.LC_ALL, 'en_US')
 
     # Parse the command-line arguments
-    args = parse_arguments()
+    args = parse_arguments(days=True, mass=True, nano=True, separately=True)
 
     # Variables to properly name chart files
     fig_suffix, fig_suffix2 = '', ''
@@ -141,42 +142,6 @@ def main():
     save_figure(fig_name, fig_path)
 
 
-def determine_data_file(args):
-    """
-    Logic for determining particles or nanoparticles concentration
-    """
-    if args.nano:
-        return 'nano.csv', 'total nano', '-nano'
-    else:
-        return 'total.csv', 'total counts', ''
-
-
-def parse_arguments():
-    """
-    Set up command-line argument parser
-    """
-    parser = argparse.ArgumentParser(
-        description='Create boxplots for data grouped by month'
-    )
-    # Define optional command-line arguments
-    parser.add_argument(
-        '-d', '--days', action='store_true', help='Plot boxplots per day'
-    )
-    parser.add_argument(
-        '-m', '--mass', action='store_true', help='Process mass data'
-    )
-    parser.add_argument(
-        '-n', '--nano', action='store_true', help='Process nanoparticle data'
-    )
-    parser.add_argument(
-        '-s',
-        '--separately',
-        action='store_true',
-        help='Save separate boxplot charts for each month',
-    )
-    return parser.parse_args()
-
-
 def plot_box_chart(
     dataframe,
     column,
@@ -209,7 +174,7 @@ def plot_box_chart(
             math.ceil(dataframe[column].max() / coeff) + 1
         )
         plt.gca().yaxis.set_major_locator(ylocator)
-    
+
     plt.ylabel(ylabel, **label_font)
     plt.gca().yaxis.set_major_formatter(
         ticker.FuncFormatter(y_formatter_function)

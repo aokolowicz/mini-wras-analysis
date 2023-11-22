@@ -1,3 +1,4 @@
+import argparse
 import math
 import matplotlib.pyplot as plt
 import os
@@ -38,6 +39,16 @@ def directory_tree(path=os.getcwd()):
             tree[item] = None
 
     return tree
+
+
+def determine_data_file(args):
+    """
+    Logic for determining particles or nanoparticles concentration
+    """
+    if args.nano:
+        return 'nano.csv', 'total nano', '-nano'
+    else:
+        return 'total.csv', 'total counts', ''
 
 
 def get_path(tree, tree_item, prefix=os.getcwd()):
@@ -95,7 +106,7 @@ def num_to_mass(dataframe, ro, conv_fact=1):
     # Create an empty DataFrame with the same index as the input
     # DataFrame
     mass_df = pd.DataFrame(index=dataframe.index)
-    
+
     # Loop through columns in the input DataFrame
     for col in dataframe:
         # Try to convert column name col (str) to diameter d (int).
@@ -104,29 +115,73 @@ def num_to_mass(dataframe, ro, conv_fact=1):
             d = int(col) * 1e-9  # Convert nanometers to meters
         except ValueError:
             continue
-        
+
         # Calculate the volume of a particle using the diameter d
-        V = 4/3 * math.pi * (d / 2) ** 3  # m^3
-        
+        V = 4 / 3 * math.pi * (d / 2) ** 3  # m^3
+
         # Calculate the total volume of particles of a particular size
         # as pandas.Series and convert to m^3
         V_total = V * dataframe[col] * 1e6  # m^3
-        
-        # Calculate the mass of particles using the density ro 
+
+        # Calculate the mass of particles using the density ro
         # as pandas.Series and convert to mg
         mass = V_total * ro * 1e6  # mg
-        
+
         # Add the calculated mass pandas.Series to the mass DataFrame
         mass_df[col] = mass * conv_fact
-    
+
     # Calculate the total mass for each row and insert the 'total mass'
     # column
-    mass_df.insert(loc=0,
-                   column='total mass',
-                   value=[mass_df.iloc[i].sum() for i in range(mass_df.shape[0])])
-    
+    mass_df.insert(
+        loc=0,
+        column='total mass',
+        value=[mass_df.iloc[i].sum() for i in range(mass_df.shape[0])],
+    )
+
     # Return the DataFrame containing mass concentrations
     return mass_df
+
+
+def parse_arguments(
+    days=False, mass=False, nano=False, particulate=False, separately=False
+):
+    """
+    Set up command-line argument parser
+    """
+    parser = argparse.ArgumentParser()
+
+    # Define optional command-line arguments
+    if days:
+        parser.add_argument(
+            '-d', '--days', action='store_true', help='Plot charts per day'
+        )
+    if mass:
+        parser.add_argument(
+            '-m', '--mass', action='store_true', help='Process mass data'
+        )
+    if nano:
+        parser.add_argument(
+            '-n',
+            '--nano',
+            action='store_true',
+            help='Process nanoparticle data',
+        )
+    if particulate:
+        parser.add_argument(
+            '-p',
+            '--particulate',
+            action='store_true',
+            help='Process particulate matter (PM) data',
+        )
+    if separately:
+        parser.add_argument(
+            '-s',
+            '--separately',
+            action='store_true',
+            help='Save separate charts for each month',
+        )
+
+    return parser.parse_args()
 
 
 def print_directory_tree(tree, indent=0):
@@ -146,8 +201,8 @@ def save_figure(fig_name, fig_path):
     """
     Prompt user to save the current figure.
     """
-    save_figure = input('Save figure? (Y/n)\n')
-    if save_figure.lower() != 'n':       
+    save_figure = input(f'Save figure {fig_name}? (Y/n)\n')
+    if save_figure.lower() != 'n':
         plt.savefig(fig_path)
         print(f'Figure saved as {fig_name}.png')
     else:
