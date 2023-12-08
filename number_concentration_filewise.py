@@ -18,8 +18,9 @@ from helpers import (
 )
 
 # File handling (indexes in col=0, conversion needed)
+# path can be specified - add it in get_path() function as well!
 dir_tree = directory_tree()
-files = list_files(dir_tree, 'day', '.dat')
+files = list_files(dir_tree, 'day', 'C.dat')    # C.dat for number concentration
 for file in files:
     df = pd.read_table(get_path(dir_tree, file), skiprows=10, index_col=0)
 
