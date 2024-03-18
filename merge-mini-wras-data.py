@@ -35,17 +35,20 @@ def merge_data(files, output_files, prefix):
             data_to_save = nano if 'nano' in output_file else df
             # Ensure that the file is overwritten if it's the first
             # file being saved
-            if files.index(file) == 0:
-                data_to_save.to_csv(
-                    os.path.join(prefix, 'merged-data', output_file) + '.csv',
-                    mode='w',
-                )
-            else:
-                data_to_save.to_csv(
-                    os.path.join(prefix, 'merged-data', output_file) + '.csv',
-                    mode='a',
-                    header=False,
-                )
+            try:
+                if files.index(file) == 0:
+                    data_to_save.to_csv(
+                        os.path.join(prefix, 'merged-data', output_file) + '.csv',
+                        mode='w',
+                    )
+                else:
+                    data_to_save.to_csv(
+                        os.path.join(prefix, 'merged-data', output_file) + '.csv',
+                        mode='a',
+                        header=False,
+                    )
+            except OSError:
+                os.mkdir(os.path.join(prefix, 'merged-data'))
 
 
 # Set up command-line argument parser and parse arguments
