@@ -1,7 +1,7 @@
 # MINI-WRAS Analysis
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-This repository contains Python scripts designed to analyze and visualize **particles (or nanoparticles) number and mass concentration** data obtained from GRIMM MINI-WRAS 1.371 (Wide-Range Aerosol Spectrometer). Scripts process data from the `sample-data` folder.\
+This repository contains Python scripts designed to analyze and visualize **particles (or nanoparticles) number and mass concentration** data obtained from GRIMM MINI-WRAS 1.371 (Wide-Range Aerosol Spectrometer). Scripts process data from the `sample-data` folder. The directory and file information are stored and managed efficiently using a recursive tree structure implemented through the `directory_tree()` function, enabling quick access and exploration of the directory hierarchy.\
 **Feel free to use and customize it to analyze your own data!**
 
 ## Prerequisites
@@ -35,7 +35,7 @@ python number_concentration_filewise.py
 4. Before using other scripts that require merged data, update the `path` variable in `helpers.py` and use the specified script first.
 
 ```bash
-python merge-mini-wras-data.py [OPTIONS]
+python merge-mini-wras-data.py [-d -m -n -p -s]
 ```
 
 5. You will be prompted regarding saving the generated figures.
