@@ -35,10 +35,16 @@ python number_concentration_filewise.py
 4. Before using other scripts that require merged data, update the `path` variable in `helpers.py` and use the specified script first.
 
 ```bash
-python merge-mini-wras-data.py [-d -m -n -p -s]
+python merge-mini-wras-data.py [-p]
 ```
 
-5. You will be prompted regarding saving the generated figures.
+5. After that, scripts that require merged data can be used.
+
+```bash
+python boxplots.py [-d -m -n -s]
+```
+
+6. You will be prompted regarding saving the generated figures.
 
 ## File Structure
 
