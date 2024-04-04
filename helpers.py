@@ -5,7 +5,7 @@ import os
 import pandas as pd
 
 # Define the path to the data
-path = r'C:\Users\Adrian\Desktop\repos\mini-wras-analysis\sample-data'
+path = r'C:\Users\Adrian\Desktop\repos\mini-wras-analysis'
 
 # Define constants
 mm = 1 / 25.4  # Conversion factor from inches to mm
@@ -19,10 +19,8 @@ tick_font = {'fontname': 'Verdana', 'fontsize': 8}
 
 
 def directory_tree(path=os.getcwd()):
-    """
-    Generate a nested dictionary representing the directory
-    tree.
-    """
+    """Generate nested dictionary representing the directory tree."""
+
     tree = {}
     # Iterate over items (folders and files) in the root directory
     for item in os.listdir(path):
@@ -42,20 +40,20 @@ def directory_tree(path=os.getcwd()):
 
 
 def determine_data_file(args):
-    """
-    Logic for determining particles or nanoparticles concentration
-    """
-    if args.nano:
-        return 'nano.csv', 'total nano', '-nano'
-    else:
+    """Determine usage of particles or nanoparticles concentration."""
+
+    try:
+        if args.nano:
+            return 'nano.csv', 'total nano', '-nano'
+        else:
+            return 'total.csv', 'total counts', ''
+    except AttributeError:
         return 'total.csv', 'total counts', ''
 
 
 def get_path(tree, tree_item, prefix=os.getcwd()):
-    """
-    Recursively searche for a target file in a nested directory
-    tree.
-    """
+    """Recursively search for a `tree_item` in a directory `tree`."""
+
     for item, subtree in tree.items():
         # Construct the full path
         item_path = os.path.join(prefix, item)
@@ -75,10 +73,8 @@ def get_path(tree, tree_item, prefix=os.getcwd()):
 
 
 def list_files(tree, keyword, file_extension):
-    """
-    Recursively search the nested directory tree for files that
-    match a keyword and file extension.
-    """
+    """List files that match `keyword` and `file_extension`."""
+
     files = []
     # Iterate through items (keys and values) in the current
     # directory level
@@ -99,12 +95,16 @@ def list_files(tree, keyword, file_extension):
 
 
 def num_to_mass(dataframe, ro, conv_fact=1):
+    """Convert number concentrations to mass concentrations.
+
+    Calculate mass concentrations expressed in mg/m^3 from number
+    concentrations expressed in 1/cm^3 using provided density `ro`
+    and optionally a conversion factor `conv_fact`. Conversion factor
+    improves the consistency of concentrations between results from
+    calculations and from MINI-WRAS.
     """
-    Convert number concentrations in 1/cm^3 to mass concentrations
-    in mg/m^3 using provided density.
-    """
+
     # Create an empty DataFrame with the same index as the input
-    # DataFrame
     mass_df = pd.DataFrame(index=dataframe.index)
 
     # Loop through columns in the input DataFrame
@@ -145,15 +145,17 @@ def num_to_mass(dataframe, ro, conv_fact=1):
 def parse_arguments(
     days=False, mass=False, nano=False, particulate=False, separately=False
 ):
-    """
-    Set up command-line argument parser
-    """
+    """Set up command-line argument parser."""
+
     parser = argparse.ArgumentParser()
 
     # Define optional command-line arguments
     if days:
         parser.add_argument(
-            '-d', '--days', action='store_true', help='Plot charts per day'
+            '-d',
+            '--days',
+            action='store_true',
+            help='Plot charts per day in one figure'
         )
     if mass:
         parser.add_argument(
@@ -185,10 +187,8 @@ def parse_arguments(
 
 
 def print_directory_tree(tree, indent=0):
-    """
-    Print a nested dictionary representing the directory tree
-    with proper indents.
-    """
+    """Print the directory tree with proper indents."""
+
     for item, subtree in tree.items():
         if subtree is None:
             print('  ' * indent + '- ' + item)
@@ -198,22 +198,19 @@ def print_directory_tree(tree, indent=0):
 
 
 def save_figure(fig_name, fig_path):
-    """
-    Prompt user to save the current figure.
-    """
+    """Prompt user to save the current figure."""
+
     save_figure = input(f'Save figure {fig_name}? (Y/n)\n')
     if save_figure.lower() != 'n':
         plt.savefig(fig_path)
-        print(f'Figure saved as {fig_name}.png')
+        print(f'Figure saved as {fig_name}.png in\n{fig_path}.')
     else:
         print('Figure not saved.')
 
 
 def tell_parent(item_path):
-    """
-    Extract the name of the parent folder from the given
-    item path.
-    """
+    """Extract the parent folder from the given `item_path`."""
+
     # Find the index of the last backslash in the item_path
     end = item_path.rfind('\\')
     # Find the index of the second-to-last backslash, starting
@@ -228,9 +225,8 @@ def tell_parent(item_path):
 
 
 def y_formatter_function(x, pos):
-    """
-    Custom formatter function for y-axis ticks.
-    """
+    """Custom formatter function for y-axis ticks."""
+    
     if x == 0:
         return '{:,}'.format(int(x))
     elif x < 0.01:
