@@ -9,9 +9,12 @@ import sys
 from matplotlib import ticker
 from helpers import (
     determine_data_file,
+    directory_tree,
+    get_path,
     num_to_mass,
     save_figure,
     parse_arguments,
+    tell_parent,
     y_formatter_function,
     mm,
     path,
@@ -37,7 +40,8 @@ def main():
     data_file, column_name, fig_suffix = determine_data_file(args)
 
     # Load data
-    df = pd.read_csv(os.path.join(path, 'merged-data', data_file), index_col=0)
+    dir_tree = directory_tree(path)
+    df = pd.read_csv(get_path(dir_tree, data_file, path), index_col=0)
 
     # Conversion of MINI-WRAS dates to datetime format
     df.index = pd.to_datetime(df.index, dayfirst=True)
@@ -137,8 +141,9 @@ def main():
         )
 
     # Save figure when there is the only one
+    up = tell_parent(get_path(dir_tree, data_file, path))
     fig_name = f'boxplots{name_suffix}{fig_suffix}{fig_suffix2}'
-    fig_path = os.path.join(path, 'merged-data', f'{fig_name}.png')
+    fig_path = os.path.join(get_path(dir_tree, up, path), f'{fig_name}.png')
     save_figure(fig_name, fig_path)
 
 
@@ -153,9 +158,8 @@ def plot_box_chart(
     mass=False,
     coeff=1,
 ):
-    """
-    Plots a boxplot from the provided dataframe based on given parameters.
-    """
+    """Plot a boxplot from the provided `dataframe`."""
+    
     # Group data by grouped_by variable
     boxplot_data = [
         group[column] for _, group in dataframe.groupby(grouped_by)
