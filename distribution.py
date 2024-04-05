@@ -4,14 +4,17 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import pandas as pd
+import sys
 
 from matplotlib import ticker
 from helpers import (
     determine_data_file,
     directory_tree,
     get_path,
+    list_files,
     num_to_mass,
     parse_arguments,
+    process_file,
     save_figure,
     tell_parent,
     mm,
@@ -25,13 +28,11 @@ from helpers import (
 
 
 def main():
-    # TODO: Add distribution creation from 1 .dat file
-
     # Ensure proper language formatting, e.g. months' names
     locale.setlocale(locale.LC_ALL, 'en_US')
 
     # Parse the command-line arguments
-    args = parse_arguments(separately=True, mass=True)
+    args = parse_arguments(keyword=True, separately=True, mass=True)
 
     # Variables to properly name chart files
     fig_suffix, fig_suffix2 = '', ''
@@ -39,20 +40,56 @@ def main():
     # Determine the usage of total.csv or nano.csv
     data_file, _, fig_suffix = determine_data_file(args)
 
-    # Load data
-    dir_tree = directory_tree(path)
-    df = pd.read_csv(get_path(dir_tree, data_file, path), index_col=0)
+    # Logic to plot distribution charts for every file in path
+    if args.keyword:
+        # Ensure proper using of flags
+        if args.keyword and args.separately:
+            sys.exit('Only one flag can be used: -k or -s.')
 
-    # Conversion of MINI-WRAS dates to datetime format
-    df.index = pd.to_datetime(df.index, dayfirst=True)
+        # Load data
+        dir_tree = directory_tree(path)
+        files = list_files(dir_tree, args.keyword, 'C.dat')
+        for file in files:
+            df, _ = process_file(dir_tree, file)
 
-    # Logic for determining mass concentration
-    if args.mass:
-        df = num_to_mass(df, ro, corr_fact)
-        title_prefix = 'Mass'
-        fig_suffix2 = '-mass'
+            # Logic to plot mass distributions for each file
+            if args.mass:
+                df = num_to_mass(df, ro, corr_fact)
+                title_prefix = 'Mass'
+                fig_suffix2 = '-mass'
+            else:
+                title_prefix = 'Number'
+
+            name_suffix = f"-({file[:file.rfind('-')]})"
+            plot_distribution(df, f'{title_prefix} size distribution')
+
+            # Save figure if requested
+            parent = tell_parent(get_path(dir_tree, file, path))
+            fig_name = f"distribution{name_suffix}{fig_suffix}{fig_suffix2}"
+            fig_path = os.path.join(
+                get_path(dir_tree, parent, path), f'{fig_name}.png'
+            )
+            save_figure(fig_name, fig_path)
+
+        # Exit to avoid saving the plots again
+        sys.exit()
+
+    # Logic to load data from merged-data
     else:
-        title_prefix = 'Number'
+        # Load data
+        dir_tree = directory_tree(path)
+        df = pd.read_csv(get_path(dir_tree, data_file, path), index_col=0)
+
+        # Conversion of MINI-WRAS dates to datetime format
+        df.index = pd.to_datetime(df.index, dayfirst=True)
+
+        # Logic for determining mass concentration
+        if args.mass:
+            df = num_to_mass(df, ro, corr_fact)
+            title_prefix = 'Mass'
+            fig_suffix2 = '-mass'
+        else:
+            title_prefix = 'Number'
 
     # Logic to plot distribution charts separately for each month
     if args.separately:
