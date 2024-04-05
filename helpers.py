@@ -143,7 +143,12 @@ def num_to_mass(dataframe, ro, conv_fact=1):
 
 
 def parse_arguments(
-    days=False, mass=False, nano=False, particulate=False, separately=False
+    days=False,
+    keyword=False,
+    mass=False,
+    nano=False,
+    particulate=False,
+    separately=False,
 ):
     """Set up command-line argument parser."""
 
@@ -155,7 +160,14 @@ def parse_arguments(
             '-d',
             '--days',
             action='store_true',
-            help='Plot charts per day in one figure'
+            help='Plot charts per day in one figure',
+        )
+    if keyword:
+        parser.add_argument(
+            '-k',
+            '--keyword',
+            action='store',
+            help=('Specify KEYWORD to process data for every file'),
         )
     if mass:
         parser.add_argument(
@@ -197,6 +209,26 @@ def print_directory_tree(tree, indent=0):
             print_directory_tree(subtree, indent + 1)
 
 
+def process_file(tree, file):
+    """Read data to the pandas.DataFrame and prepare for analysis."""
+
+    df = pd.read_table(get_path(tree, file, path), skiprows=10, index_col=0)
+
+    # Nanoparticles are in the first 8 columns (from 10 to 100 nm),
+    # without column 0 where the total counts for all particles are
+    nano = df.iloc[:, 1:9]
+    nano.insert(
+        loc=0,
+        column='total nano',
+        value=nano.sum(axis=1),
+    )
+
+    # Convert index to datetime
+    df.index = pd.to_datetime(df.index, dayfirst=True)
+
+    return df, nano
+
+
 def save_figure(fig_name, fig_path):
     """Prompt user to save the current figure."""
 
@@ -226,7 +258,7 @@ def tell_parent(item_path):
 
 def y_formatter_function(x, pos):
     """Custom formatter function for y-axis ticks."""
-    
+
     if x == 0:
         return '{:,}'.format(int(x))
     elif x < 0.01:
